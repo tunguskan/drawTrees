@@ -30,15 +30,17 @@ plotTree() {
      plotTree $branchB $((y-height)) $((height/2)) $((depth-1))
 }
 
+buildGrid() {
+    for ((y=0; y<=rows; y++)); do
+      for ((x=0; x<=cols; x++)); do
+        [[ -v plottedTrees[$y*100+$x] ]] && grid+="1" || grid+="_"
+      done
+      (( y!=rows )) && grid+=$'\n'
+    done
+
+    echo -n "$grid"
+}
+
 (( n <=5 && n >= 1 )) && plotTree 49 62 32 $n
 
-for ((y=0; y<=rows; y++)); do
-    line=''
-  for ((x=0; x<=cols; x++)); do
-    [[ -v plottedTrees[$y*100+$x] ]] && line+="1" || line+="_"
-  done
-  echo -n "$line"
-  if (( y < rows )); then
-    echo
-  fi
-done
+buildGrid
