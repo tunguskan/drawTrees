@@ -2,7 +2,6 @@
 
 rows=62
 cols=99
-declare -A plottedTrees
 read n
 
 plotTree() {
@@ -31,11 +30,12 @@ plotTree() {
 }
 
 buildGrid() {
+    local grid=
     for ((y=0; y<=rows; y++)); do
       for ((x=0; x<=cols; x++)); do
         [[ -v plottedTrees[$y*100+$x] ]] && grid+="1" || grid+="_"
       done
-      (( y!=rows )) && grid+=$'\n'
+      grid+=$'\n'
     done
 
     echo -n "$grid"
