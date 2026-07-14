@@ -7,6 +7,8 @@ read n
 plotTree() {
     local x=$1 y=$2 height=$3 depth=$4 branchOffset=0
 
+    (( depth <= 0 )) && return    
+
     for(( row=y, col=x; row>y-height; row-- )); do
 
         if (( row > y-height/2 )); then
@@ -23,8 +25,6 @@ plotTree() {
         plottedTrees[$row*100+$branchB]='1'
     done
 
-    (( depth <= 1 )) && return
-
      plotTree $branchA $((y-height)) $((height/2)) $((depth-1))
      plotTree $branchB $((y-height)) $((height/2)) $((depth-1))
 }
@@ -32,8 +32,9 @@ plotTree() {
 buildGrid() {
     local grid=
     for ((y=0; y<=rows; y++)); do
+      row=$(($y*100))
       for ((x=0; x<=cols; x++)); do
-        [[ -v plottedTrees[$y*100+$x] ]] && grid+="1" || grid+="_"
+        [[ -v plottedTrees[$row+$x] ]] && grid+="1" || grid+="_"
       done
       grid+=$'\n'
     done
@@ -41,6 +42,6 @@ buildGrid() {
     echo -n "$grid"
 }
 
-(( n <=5 && n >= 1 )) && plotTree 49 62 32 $n
+plotTree 49 62 32 $n
 
 buildGrid
